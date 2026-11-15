@@ -1,4 +1,5 @@
 import { ROOT, BRANCHES } from './data.js';
+import { LEAF_PROFILES } from './profiles.js';
 
 export const BOUNDS = { x: -30, y: -30, width: 2260, height: 1360 };
 const icons = {
@@ -22,10 +23,29 @@ const svgStyles = `
   .node-icon { fill: none; stroke-width: 1.65; stroke-linecap: round; stroke-linejoin: round; }
   .node-hit { fill: transparent; stroke: none; }
   .focus-ring { fill: none; stroke: #eef2ff; stroke-width: 2; opacity: 0; }
+  /* 亮度只表达已有匹配等级，保留六个分支原有的色相。 */
+  .leaf-node[data-match-level="低"] { --mark-opacity: .68; --label-opacity: .82; --note-opacity: .78; --ring-opacity: .15; --halo-opacity: .02; }
+  .leaf-node[data-match-level="较低"] { --mark-opacity: .78; --label-opacity: .88; --note-opacity: .84; --ring-opacity: .20; --halo-opacity: .025; }
+  .leaf-node[data-match-level="中等"] { --mark-opacity: .87; --label-opacity: .93; --note-opacity: .90; --ring-opacity: .25; --halo-opacity: .035; }
+  .leaf-node[data-match-level="较高"] { --mark-opacity: .96; --label-opacity: .98; --note-opacity: .96; --ring-opacity: .30; --halo-opacity: .05; }
+  .leaf-node[data-match-level="高"] { --mark-opacity: 1; --label-opacity: 1; --note-opacity: 1; --ring-opacity: .52; --halo-opacity: .14; }
+  .leaf-node .node-core { stroke-opacity: var(--mark-opacity); }
+  .leaf-node .node-icon { opacity: var(--mark-opacity); }
+  .leaf-node .node-label { opacity: var(--label-opacity); }
+  .leaf-node .node-note { opacity: var(--note-opacity); }
+  .leaf-node .node-ring { opacity: var(--ring-opacity); }
+  .leaf-node .node-halo { opacity: var(--halo-opacity); }
+  .leaf-node[data-match-level="高"] .node-core { stroke-width: 2.3; }
+  .leaf-node[data-match-level="高"] .node-label { fill: #f0f3fc; font-weight: 600; }
+  .match-glow { opacity: .12; pointer-events: none; }
   .map-node:hover .node-core, .map-node:focus .node-core, .map-node.is-selected .node-core { fill: #1a2436; stroke-width: 2.7; }
   .map-node:hover .node-ring, .map-node:focus .node-ring, .map-node.is-selected .node-ring { opacity: .7; }
   .map-node:focus-visible .focus-ring { opacity: .8; }
   .map-node:hover .node-label, .map-node.is-selected .node-label { fill: white; }
+  .leaf-node:hover .node-core, .leaf-node:focus .node-core, .leaf-node.is-selected .node-core { stroke-opacity: 1; }
+  .leaf-node:hover .node-icon, .leaf-node:focus .node-icon, .leaf-node.is-selected .node-icon,
+  .leaf-node:hover .node-label, .leaf-node:focus .node-label, .leaf-node.is-selected .node-label,
+  .leaf-node:hover .node-note, .leaf-node:focus .node-note, .leaf-node.is-selected .node-note { opacity: 1; }
 `;
 
 function curve(from, to, kind) {
@@ -37,8 +57,10 @@ function curve(from, to, kind) {
 
 function nodeMarkup(node, branch = false) {
   const radius = branch ? 29 : 22;
-  return `<g class="map-node" data-node="${node.id}" transform="translate(${node.x} ${node.y})" tabindex="0" role="button" aria-label="${node.fullLabel || node.label}，${node.note}，查看详情" aria-expanded="false">
+  const match = branch ? null : LEAF_PROFILES[node.id]?.match;
+  return `<g class="map-node${match ? ' leaf-node' : ''}" data-node="${node.id}"${match ? ` data-match-level="${match.level}"` : ''} transform="translate(${node.x} ${node.y})" tabindex="0" role="button" aria-label="${node.fullLabel || node.label}，${node.note}${match ? `，个人匹配度${match.level}` : ''}，查看详情" aria-expanded="false">
     <circle class="node-hit" r="49"/>
+    ${match?.level === '高' ? `<circle class="match-glow" r="32" fill="${node.color}" filter="url(#match-glow)" aria-hidden="true"/>` : ''}
     <circle class="node-halo" r="${radius + 7}" stroke="${node.color}"/>
     <circle class="node-ring" r="${radius + 13}" stroke="${node.color}" ${branch ? 'stroke-dasharray="4 5"' : ''}/>
     <circle class="node-ring" r="${radius + 6}" stroke="${node.color}"/>
@@ -52,7 +74,7 @@ function nodeMarkup(node, branch = false) {
 
 export function renderMap(svg) {
   svg.innerHTML = `<title id="map-title">个人毕业出路树</title><desc id="map-description">六个方向，三十一条可能。各方向可以交叉发展。点击节点查看简要说明。</desc>
-    <defs><style>${svgStyles}</style><pattern id="dot-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1.3" fill="#6d7f9f" opacity=".16"/></pattern>
+    <defs><style>${svgStyles}</style><filter id="match-glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="6"/></filter><pattern id="dot-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1.3" fill="#6d7f9f" opacity=".16"/></pattern>
     ${BRANCHES.map(b => `<linearGradient id="trunk-${b.id}" x1="0" y1="1" x2="0" y2="0"><stop stop-color="${b.color}" stop-opacity=".38"/><stop offset="1" stop-color="${b.color}" stop-opacity=".9"/></linearGradient>`).join('')}</defs>
     <g class="map-edges" fill="none" aria-hidden="true">${BRANCHES.map(b => {
       const d = curve(ROOT, b, 'trunk');
