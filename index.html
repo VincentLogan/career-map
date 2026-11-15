@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#090d16" />
+    <meta name="description" content="以计算机为起点，一棵向上生长的毕业出路树。探索深造、研发、人工智能、技术交叉、公共服务与自主发展的可能。" />
+    <title>向上生长 · 毕业出路地图</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="stylesheet" href="./src/styles.css" />
+    <script type="module" src="./src/main.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <header class="masthead">
+        <a class="brand" href="./" aria-label="向上生长，返回地图首页">
+          <span class="brand-symbol" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 27V15M16 21 7 12V6M16 16l9-9V3M16 14V3"/><circle cx="7" cy="5" r="2"/><circle cx="16" cy="3" r="2"/><circle cx="25" cy="3" r="2"/></svg></span>
+          <span><strong>向上生长<span class="brand-dot">.</span></strong><small>MY CAREER ATLAS</small></span>
+        </a>
+        <div class="header-caption"><span class="status-dot"></span> 计算机专业 · 毕业出路地图</div>
+        <button id="help-button" class="quiet-button" aria-expanded="false" aria-controls="help-panel"><span aria-hidden="true">?</span> 如何探索</button>
+      </header>
+      <main class="map-shell" aria-label="交互式毕业出路地图">
+        <div class="intro"><div class="eyebrow">从这里，走向更多可能</div><h1>毕业之后，<br />向哪里生长<span>？</span></h1><p>以计算机为起点，探索属于自己的方向。</p></div>
+        <div id="map-container" class="map-container" tabindex="0" role="region" aria-label="职业树画布。滚轮缩放，拖动平移，方向键移动，Tab 选择节点，回车查看详情。"><svg id="career-map" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="map-title map-description"><title id="map-title">个人毕业出路树</title><desc id="map-description">从毕业时的我，向上生长出六个大方向与三十一条具体路径。点击节点查看说明。</desc></svg></div>
+        <div class="map-meta"><span class="meta-line"></span><span>6 个方向</span><span class="meta-dot">·</span><span>31 条可能</span><span class="meta-dot">·</span><span>由你继续书写</span></div>
+        <aside id="help-panel" class="help-panel" hidden><h2>慢慢探索，不急着选择。</h2><p>拖动画布，移动视野；滚轮或双指捏合，放大细节。</p><p>点击节点查看简要介绍，点击下方方向名称定位分支。</p><p>键盘：方向键平移，+ / − 缩放，0 查看全图，Esc 关闭卡片。</p><small>这是概念版地图。各条路径可以交叉，也可以在未来重新选择。</small></aside>
+        <aside id="detail-panel" class="detail-panel" aria-label="方向详情" hidden></aside>
+      </main>
+      <footer class="bottom-bar">
+        <nav id="branch-nav" class="branch-nav" aria-label="定位职业方向"></nav>
+        <div class="map-controls" role="group" aria-label="地图工具">
+          <button id="zoom-out" class="icon-button" aria-label="缩小地图" title="缩小">−</button><output id="zoom-level" aria-live="off">100%</output><button id="zoom-in" class="icon-button" aria-label="放大地图" title="放大">+</button>
+          <span class="control-divider"></span><button id="fit-map" class="icon-button" aria-label="查看全图" title="查看全图"><svg viewBox="0 0 20 20"><path d="M7 3H3v4m10-4h4v4M3 13v4h4m10-4v4h-4"/></svg></button>
+          <span class="control-divider"></span><button id="export-button" class="export-button"><svg viewBox="0 0 20 20"><path d="M10 2v10m-4-4 4 4 4-4M3 12v5h14v-5"/></svg><span>导出地图</span></button>
+        </div>
+      </footer>
+      <div class="canvas-hint" aria-hidden="true"><svg viewBox="0 0 16 18"><rect x="3" y="1" width="10" height="15" rx="5"/><path d="M8 4v3"/></svg><span>拖动探索</span><i></i><span>滚轮缩放</span></div>
+      <div id="toast" class="toast" role="status" hidden></div>
+    </div>
+    <noscript><p class="noscript">请开启 JavaScript 查看交互地图。</p></noscript>
+  </body>
+</html>
