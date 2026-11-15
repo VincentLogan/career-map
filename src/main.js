@@ -16,7 +16,7 @@ function fittedCamera() {
   const aspect = container.clientWidth / container.clientHeight;
   const width = Math.max(BOUNDS.width, BOUNDS.height * aspect);
   const height = width / aspect;
-  return { x: 1100 - width / 2, y: 620 - height / 2, width, height };
+  return { x: BOUNDS.x + BOUNDS.width / 2 - width / 2, y: BOUNDS.y + BOUNDS.height / 2 - height / 2, width, height };
 }
 function drawCamera() {
   svg.setAttribute('viewBox', `${camera.x} ${camera.y} ${camera.width} ${camera.height}`);

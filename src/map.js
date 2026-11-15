@@ -1,6 +1,6 @@
 import { ROOT, BRANCHES } from './data.js';
 
-export const BOUNDS = { x: -30, y: -30, width: 2260, height: 1330 };
+export const BOUNDS = { x: -30, y: -30, width: 2260, height: 1360 };
 const icons = {
   book: '<path d="M-13-10q7-3 13 1 6-4 13-1v20q-7-3-13 1-6-4-13-1Z M0-9v20"/>',
   code: '<path d="m-6-9-9 9 9 9m12-18 9 9-9 9M3-13l-6 26"/>',
