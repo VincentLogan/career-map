@@ -59,7 +59,7 @@ export function renderMap(svg) {
       return `<path d="${d}" stroke="${b.color}" stroke-width="12" opacity=".035"/><path d="${d}" stroke="${b.color}" stroke-width="5" opacity=".12"/><path d="${d}" stroke="url(#trunk-${b.id})" stroke-width="2.3"/>${b.children.map(n => `<path d="${curve(b, n)}" stroke="${b.color}" stroke-width="6" opacity=".055"/><path d="${curve(b, n)}" stroke="${b.color}" stroke-width="1.7" opacity=".65"/>`).join('')}`;
     }).join('')}</g>
     <g class="map-nodes">${BRANCHES.map(b => b.children.map(n => nodeMarkup({ ...n, color: b.color })).join('') + nodeMarkup(b, true)).join('')}
-    <g class="map-node root-node" data-node="me" transform="translate(${ROOT.x} ${ROOT.y})" tabindex="0" role="button" aria-label="毕业时的我，查看地图说明" aria-expanded="false"><circle class="node-hit" r="60"/><circle r="56" fill="none" stroke="#b9bdd9" opacity=".1"/><circle r="46" fill="none" stroke="#b9bdd9" opacity=".22"/><circle class="node-core" r="35" stroke="#d9dced"/><circle class="focus-ring" r="53"/><g fill="none" stroke="#e0e3f1" stroke-width="2.1" stroke-linecap="round"><circle cy="-8" r="7"/><path d="M-12 15v-4a12 12 0 0 1 24 0v4"/></g><text class="node-label branch-label" y="78">${ROOT.label}</text><text class="node-note" y="106">${ROOT.note}</text></g></g>`;
+    <g class="map-node root-node" data-node="me" transform="translate(${ROOT.x} ${ROOT.y})" tabindex="0" role="button" aria-label="${ROOT.label}，查看地图说明" aria-expanded="false"><circle class="node-hit" r="60"/><circle r="56" fill="none" stroke="#b9bdd9" opacity=".1"/><circle r="46" fill="none" stroke="#b9bdd9" opacity=".22"/><circle class="node-core" r="35" stroke="#d9dced"/><circle class="focus-ring" r="53"/><g fill="none" stroke="#e0e3f1" stroke-width="2.1" stroke-linecap="round"><circle cy="-8" r="7"/><path d="M-12 15v-4a12 12 0 0 1 24 0v4"/></g><text class="node-label branch-label" y="78">${ROOT.label}</text><text class="node-note" y="106">${ROOT.note}</text></g></g>`;
 }
 
 export function exportMarkup(svg) {
@@ -74,7 +74,7 @@ export function exportMarkup(svg) {
   bg.innerHTML = '<rect x="-30" y="-110" width="2260" height="1500" fill="#090d16"/><rect x="-30" y="-110" width="2260" height="1500" fill="url(#dot-grid)"/>';
   copy.insertBefore(bg, copy.querySelector('.map-edges'));
   const caption = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-  caption.innerHTML = `<text x="50" y="-25" fill="#eef0f8" font-size="38" font-weight="600" font-family="sans-serif">向上生长 · 我的毕业出路地图</text><text x="2180" y="-25" text-anchor="end" fill="#8a96ac" font-size="20" font-family="sans-serif">计算机专业 / 六大方向 / 概念版</text>${BRANCHES.map((b, i) => `<circle cx="${150 + i * 345}" cy="1350" r="5" fill="${b.color}"/><text x="${166 + i * 345}" y="1357" fill="#aab4c7" font-size="19" font-family="sans-serif">${b.label}</text>`).join('')}`;
+  caption.innerHTML = `<text x="50" y="-25" fill="#eef0f8" font-size="38" font-weight="600" font-family="sans-serif">向上生长 · 我的毕业出路地图</text><text x="2180" y="-25" text-anchor="end" fill="#8a96ac" font-size="20" font-family="sans-serif">6 个方向 · 由你继续书写</text>${BRANCHES.map((b, i) => `<circle cx="${150 + i * 345}" cy="1350" r="5" fill="${b.color}"/><text x="${166 + i * 345}" y="1357" fill="#aab4c7" font-size="19" font-family="sans-serif">${b.label}</text>`).join('')}`;
   copy.appendChild(caption);
   return new XMLSerializer().serializeToString(copy);
 }

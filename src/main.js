@@ -1,5 +1,6 @@
 import { ROOT, BRANCHES, ALL_NODES } from './data.js';
 import { BOUNDS, renderMap, exportMarkup } from './map.js';
+import { MATCH_LEVELS } from './profiles.js';
 
 const svg = document.querySelector('#career-map');
 const container = document.querySelector('#map-container');
@@ -63,12 +64,16 @@ function openPanel(id) {
   const node = ALL_NODES.find(n => n.id === id);
   const branch = node.branchId ? BRANCHES.find(b => b.id === node.branchId) : BRANCHES.find(b => b.id === id);
   const root = id === ROOT.id;
+  const leaf = Boolean(node.branchId);
   const color = node.color || '#c2b3f0';
   selectedId = id;
   const group = svg.querySelector(`[data-node="${id}"]`);
   group.classList.add('is-selected'); group.setAttribute('aria-expanded', 'true');
   panel.style.setProperty('--detail-color', color);
-  panel.innerHTML = `<div class="detail-top"><span class="detail-category"><i></i>${root ? '每条路，都是可能' : branch?.label || '方向概览'}</span><button class="close-button" aria-label="关闭详情">×</button></div><div class="detail-orbit" aria-hidden="true"><span>${root ? '↗' : branch?.icon === 'code' ? '⌘' : '✧'}</span></div><h2>${node.fullLabel || node.label}</h2><p class="detail-note">${node.note}</p><div class="detail-rule"></div><p class="detail-copy">${root ? '这是一棵以计算机专业为起点的毕业出路树。六个方向并不互斥：可以继续深造后就业，也可以在工作中转向交叉领域。先探索，再慢慢找到自己的答案。' : node.description}</p>${root ? `<div class="detail-tags">${BRANCHES.map(b => `<span>${b.label}</span>`).join('')}</div>` : `<h3>${node.children ? '可以继续探索' : '值得关注的能力与准备'}</h3><div class="detail-tags">${(node.children ? node.children.map(n => n.label) : node.skills).map(s => `<span>${s}</span>`).join('')}</div>`}<div class="detail-foot"><span class="status-dot"></span> 概念版说明 · 后续可补充个人计划</div>`;
+  panel.classList.toggle('is-leaf', leaf);
+  const abilities = leaf ? `<section class="abilities-section" aria-label="所需能力"><h3>所需能力</h3><ul class="ability-list">${node.abilities.map(([name, detail]) => `<li><strong>${name}</strong><span>${detail}</span></li>`).join('')}</ul></section>` : '';
+  const match = leaf ? `<section class="match-section" style="--match-color:${MATCH_LEVELS[node.match.level].color}" aria-label="个人匹配度"><div class="match-heading"><h3>个人匹配度</h3><span class="match-label">${node.match.level}</span></div><div class="match-meter" role="meter" aria-label="个人匹配度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${node.match.value}" aria-valuetext="${node.match.level}"><span style="width:${node.match.value}%"></span></div><div class="match-scale" aria-hidden="true"><span>低</span><span>高</span></div></section>` : '';
+  panel.innerHTML = `<div class="detail-top"><span class="detail-category"><i></i>${root ? '每条路，都是可能' : branch?.label || '方向概览'}</span><button class="close-button" aria-label="关闭详情">×</button></div><div class="detail-content"><div class="detail-orbit" aria-hidden="true"><span>${root ? '↗' : branch?.icon === 'code' ? '⌘' : '✧'}</span></div><h2>${node.fullLabel || node.label}</h2><p class="detail-note">${node.note}</p><div class="detail-rule"></div><p class="detail-copy">${root ? '这是一棵以计算机专业为起点的毕业出路树。六个方向并不互斥：可以继续深造后就业，也可以在工作中转向交叉领域。先探索，再慢慢找到自己的答案。' : node.description}</p>${abilities}${root ? `<div class="detail-tags">${BRANCHES.map(b => `<span>${b.label}</span>`).join('')}</div>` : `<h3>${node.children ? '可以继续探索' : '关注与准备'}</h3><div class="detail-tags">${(node.children ? node.children.map(n => n.label) : node.skills).map(s => `<span>${s}</span>`).join('')}</div>`}</div>${match}`;
   panel.hidden = false;
   panel.querySelector('.close-button').addEventListener('click', () => closePanel());
   panel.querySelector('.close-button').focus({ preventScroll: true });

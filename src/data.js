@@ -1,5 +1,7 @@
 // 所有文字、配色和布局集中在这里。坐标是概念版的人工排布，便于保持树形构图。
-export const ROOT = { id: 'me', label: '毕业时的我', note: '计算机专业 · 未来未定', x: 1100, y: 1190 };
+import { LEAF_PROFILES } from './profiles.js';
+
+export const ROOT = { id: 'me', label: '我', note: '未来未定', x: 1100, y: 1190 };
 export const BRANCHES = [
   {
     id: 'study', label: '继续深造', note: '让好奇心走得更远', color: '#b6a0ed', icon: 'book', x: 780, y: 440,
@@ -41,7 +43,7 @@ export const BRANCHES = [
       { id: 'product', label: '产品经理', note: '定义值得做的事', x: 1690, y: 455, description: '理解用户问题，梳理产品需求，与设计和研发协作推进产品。', skills: ['需求分析', '沟通协作', '产品思维'] },
       { id: 'operations', label: '产品运营', note: '连接产品与用户', x: 1850, y: 365, description: '围绕用户使用与反馈开展运营，通过数据和实践推动产品改进。', skills: ['用户理解', '数据分析', '执行协作'] },
       { id: 'consulting', label: '技术咨询', note: '拆解真实业务问题', x: 2020, y: 425, description: '理解组织的业务与技术现状，参与技术方案分析和改进建议。', skills: ['问题分析', '行业理解', '方案表达'] },
-      { id: 'solutions', label: '解决方案', fullLabel: '解决方案架构师', note: '把技术组合成方案', x: 2100, y: 575, description: '根据业务场景整合技术方案。这通常需要逐步积累工程与行业经验，可作为长期发展方向。', skills: ['架构基础', '项目经验', '客户沟通'] },
+      { id: 'solutions', label: '方案架构师', note: '把技术组合成方案', x: 2100, y: 575, description: '根据业务场景整合技术方案。这通常需要逐步积累工程与行业经验，可作为长期发展方向。', skills: ['架构基础', '项目经验', '客户沟通'] },
       { id: 'fintech', label: '金融科技', note: '技术走入金融场景', x: 2100, y: 740, description: '在金融相关业务中应用软件、数据和智能技术，理解场景约束。', skills: ['技术能力', '金融常识', '风险意识'] },
       { id: 'health', label: 'AI + 医疗', note: '探索健康领域应用', x: 2020, y: 890, description: '探索人工智能与医疗健康的交叉应用，重视领域协作和实际验证。', skills: ['AI 基础', '领域协作', '数据意识'] },
       { id: 'manufacturing', label: '智能制造', note: '连接软件与生产', x: 1860, y: 950, description: '将软件、数据与智能技术用于生产制造场景，连接数字系统与实体过程。', skills: ['软件工程', '工业场景', '系统集成'] },
@@ -69,4 +71,4 @@ export const BRANCHES = [
     ],
   },
 ];
-export const ALL_NODES = [ROOT, ...BRANCHES.flatMap(branch => [branch, ...branch.children.map(node => ({ ...node, branchId: branch.id, color: branch.color }))])];
+export const ALL_NODES = [ROOT, ...BRANCHES.flatMap(branch => [branch, ...branch.children.map(node => ({ ...node, ...LEAF_PROFILES[node.id], branchId: branch.id, color: branch.color }))])];
